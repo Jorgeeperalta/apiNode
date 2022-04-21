@@ -7,6 +7,6 @@ const {getItems,getItem,createItem,updateItem,deleteItem} = require('../controll
 router.get('/:id',getItem)
 router.get('/',getItems)
 router.get('/',updateItem)
-router.post('/',validatorCreateItem,customHeader,createItem)
+router.post('/',validatorCreateItem,createItem)
 router.get('/:id',deleteItem)
 module.exports = router
