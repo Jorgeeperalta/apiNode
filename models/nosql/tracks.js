@@ -23,10 +23,9 @@ const TracksSchema = new mongoose.Schema({
     end: { type: Number },
   },
 
-  mediaId: { type: mongoose.Types.ObjectId },
+  mediaId: { type: String },
 
-  timestamps: true, // todo fecha de creacion y actulizacion
-  versionKey: false, //
+  
 });
 
 module.exports = mongoose.model("tracks", TracksSchema);
