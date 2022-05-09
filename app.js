@@ -3,23 +3,17 @@ const express = require('express');
 const cors = require('cors')
 const app = express()
 const morganBody = require('morgan-body')
-const {IncomingWebhook} = require('@slack/webhook')
-const dbConnection = require('./config/mongo')
+const ENGINE_DB = process.env.ENGINE_DB
+const dbConnectionNosql = require('./config/mongo')
+const  {dbConnectionMysql} = require('./config/mysql')
+const loggerStream = require('./utils/handleLogger')
 app.use(cors())
 app.use(express.json())
 app.use(express.static("storage"))
 
-const webhook = new IncomingWebhook(process.env.SLACK_WEBHOOK)
 
-const loggerStream = {
-    write: message => {
-        webhook.send({ 
-            text: message
-        })
-        console.log("capturando el log", message)
-      // do anything - emit to websocket? send message somewhere? log to cloud?
-    },
-  };
+
+
 morganBody(app,{
     noColor: false,
     stream: loggerStream,
@@ -39,6 +33,6 @@ app.use("/api",require("./routes"))
 
 app.listen(port, () =>{
     console.log('listening on port '+ port)
-})
+});
 
-dbConnection()
+(ENGINE_DB === 'nosql') ? dbConnectionNosql() : dbConnectionMysql()

@@ -15,7 +15,7 @@ fs = require("fs")
 
 const getItems = async (req, res) => {
   try {
-    const data = await storageModel.find({});
+    const data = await storageModel.findAllData({});
     res.send({ data });
   } catch (error) {
     handleHttpError(res, "ERROR_GET_LIST_ITEMS");

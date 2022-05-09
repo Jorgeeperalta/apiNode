@@ -1,4 +1,4 @@
-const { tracksModel } = require("../models");
+const { tracksModel, storageModel } = require("../models");
 const { handleHttpError } = require("../utils/handleError");
 const { matchedData } = require("express-validator");
 /**
@@ -12,9 +12,15 @@ const getItems = async (req, res) => {
     const user = req.user
     user.set("password", undefined, { strict: false });
     user.set("email", undefined, { strict: false });
-    const data = await tracksModel.find({});
+  // const data = await tracksModel.find({});
 
-    res.send({ data, user });
+   tracksModel.find({}, function (err, tracks) {
+      storageModel.populate(tracks, { path: "mediaId" }, function (err, tracks) {
+        res.status(200).send({ tracks, user });
+      });
+    });
+
+  // res.send({ data, user });
   } catch (e) {
     handleHttpError(res, "ERROR_GET_ITEMS");
   }
@@ -34,7 +40,7 @@ const getItem  = async (req, res) => {
 const createItem = async (req, res) => {
   try {
     const body = matchedData(req);
-
+    
     const resultado = await tracksModel.create(body);
     res.send({ resultado });
   } catch (e) {

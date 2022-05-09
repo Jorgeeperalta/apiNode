@@ -9,6 +9,6 @@ const {getItems,getItem,createItem,updateItem,deleteItem} = require('../controll
 router.get('/:id',authMiddleware,validatorGetItem,getItem)
 router.get('/',authMiddleware,getItems)
 router.put('/:id',authMiddleware,validatorGetItem,validatorCreateItem,updateItem)
-router.post('/',authMiddleware,checkRol(["admin"]),validatorCreateItem,createItem)
+router.post('/',authMiddleware,checkRol(["user","admin"]),validatorCreateItem,createItem)
 router.delete('/:id',authMiddleware,validatorGetItem,deleteItem)
 module.exports = router
