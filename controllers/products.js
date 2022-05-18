@@ -98,7 +98,7 @@ const getItem = async (req, res) => {
 
 
     } else {
-      data = await productsModel.findById(id);
+      data = await productsModel.findOneData(id);
       console.log(req);
       res.send({ data });
     

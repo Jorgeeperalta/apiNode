@@ -16,57 +16,61 @@ const ProductsSchema = new mongoose.Schema(
     versionKey: false, //
   }
 );
-// ProductsSchema.statics.findAllData = function () {
-//   const joinData = this.aggregate([
-//     {
-//         $group: resources,
-//     },
-//     {
-//       $lookup: {
-//         from: "categories", //TODO Tracks --> storages
-//         localField: "categoriesId", //TODO Tracks.mediaId
-//         foreignField: "_id", //TODO Straoges._id
-//         as: "categirie", //TODO Alias!
-//       },
-//     },
-//     {
-//         $lookup: {
-//           from: "storages", // from collection name
-//           localField: "mediaId",
-//           foreignField: "_id",
-//           as: "image",
-//         },
-//       },
 
-//   ]);
-//   return joinData;
-// };
-// const joinData = this.aggregate(
-//   [
-//     {
-//       $group: resources,
-//     },
-//     {
-//       $lookup: {
-//         from: "Comments", // collection to join
-//         localField: "_id", //field from the input documents
-//         foreignField: "user_id", //field from the documents of the "from" collection
-//         as: "comments", // output array field
-//       },
-//     },
-//     {
-//       $lookup: {
-//         from: "Post", // from collection name
-//         localField: "_id",
-//         foreignField: "user_id",
-//         as: "posts",
-//       },
-//     },
-//   ],
-//   function (error, data) {
-//     return res.json(data);
-//     //handle error case also
-//   }
-// );
+ProductsSchema.statics.findOneData = function (id) {
+  const joinData = this.aggregate([
+
+   
+    {
+      $match: {_id: mongoose.Types.ObjectId(id)},
+    },
+    
+    
+    {
+      $lookup: {
+        from: "categories", //TODO Tracks --> storages
+        localField: "categoriesId", //TODO Tracks.mediaId
+        foreignField: "_id", //TODO Straoges._id
+        as: "categoria", //TODO Alias!
+      },
+    },
+    {
+        $lookup: {
+          from: "storages", // from collection name
+          localField: "mediaId",
+          foreignField: "_id",
+          as: "image",
+        },
+      },
+
+  ]);
+  return joinData;
+};
+ProductsSchema.statics.findAllData = function () {
+  const joinData = this.aggregate([
+    {
+        $group: resources,
+    },
+    {
+      $lookup: {
+        from: "categories", //TODO Tracks --> storages
+        localField: "categoriesId", //TODO Tracks.mediaId
+        foreignField: "_id", //TODO Straoges._id
+       
+      },
+    },
+    {
+        $lookup: {
+          from: "storages", // from collection name
+          localField: "mediaId",
+          foreignField: "_id",
+        
+        },
+      },
+
+  ]);
+  return joinData;
+};
+
 ProductsSchema.plugin(mongooseDelete, { override: "all" });
 module.exports = mongoose.model("products", ProductsSchema);
