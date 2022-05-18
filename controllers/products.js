@@ -2,6 +2,10 @@ const { productsModel, storageModel, categoriesModel } = require("../models");
 const { handleHttpError } = require("../utils/handleError");
 const { matchedData } = require("express-validator");
 const ENGINE_DB = process.env.ENGINE_DB;
+const database = process.env.MYSQL_DATABASE;
+const username = process.env.MYSQL_USERNAME;
+const password = process.env.MYSQL_PASSWORD;
+const host = process.env.MYSQL_HOST;
 /**
  *
  * @param {*} req
@@ -11,17 +15,40 @@ const ENGINE_DB = process.env.ENGINE_DB;
 const getItems = async (req, res) => {
   var user = req.user;
   var data;
+  user.set("password", undefined, { strict: false });
+  user.set("email", undefined, { strict: false });
   try {
     if (ENGINE_DB == "mysql") {
-      user.set("password", undefined, { strict: false });
-      user.set("email", undefined, { strict: false });
-      data = await productsModel.findAll({});
-      res.send({ data, user });
+      var mysql = require("mysql");
+
+      var con = mysql.createConnection({
+        host: host,
+        user: username,
+        password: password,
+        database: database,
+      });
+
+      con.connect(function (err) {
+        if (err) throw err;
+      
+        con.query(
+          "SELECT productsses.name,productsses.price,productsses.amount,productsses.stock,"+
+          " categories.name as categoria,storages.filename,storages.url "+
+          "  FROM productsses  INNER JOIN categories on productsses.categoriaId = categories.id "+
+          " JOIN storages ON productsses.mediaId = storages.id",
+          function (err, result, fields) {
+            if (err) throw err;
+            console.log(result);
+            res.send({ result, user });
+          }
+        );
+      });
+
+    
     } else {
       user.set("password", undefined, { strict: false });
       user.set("email", undefined, { strict: false });
-      //    data = await productsModel.find({});;
-      //   res.send({ data, user });
+
       productsModel.find({}, function (err, products) {
         storageModel.populate(
           products,
@@ -29,10 +56,7 @@ const getItems = async (req, res) => {
           function (err, products) {
             res.status(200).send({ products, user });
           },
-          categoriesModel.populate(
-            products,
-            { path: "categoriaId"}
-          )
+          categoriesModel.populate(products, { path: "categoriaId" })
         );
       });
     }
@@ -43,25 +67,41 @@ const getItems = async (req, res) => {
 const getItem = async (req, res) => {
   var data;
   try {
+    
     req = matchedData(req);
     const { id } = req;
     if (ENGINE_DB === "mysql") {
-      data = await productsModel.findOneData(id);
-      console.log(req);
-      res.send({ data });
+
+      var mysql = require("mysql");
+
+      var con = mysql.createConnection({
+        host: host,
+        user: username,
+        password: password,
+        database: database,
+      });
+
+      con.connect(function (err) {
+        if (err) throw err;
+     
+        con.query(
+          "SELECT productsses.name,productsses.price,productsses.amount,productsses.stock, categories.name as categoria,storages.filename,storages.url FROM productsses INNER JOIN categories on productsses.categoriaId = categories.id JOIN storages ON productsses.mediaId = storages.id WHERE productsses.id="+id,
+          function (err, result, fields) {
+            if (err) throw err;
+            console.log(result);
+            res.send({ result});
+          }
+        );
+      });
+      
+    
+
+
     } else {
       data = await productsModel.findById(id);
       console.log(req);
       res.send({ data });
-      // productsModel.findById(id, function (err, tracks) {
-      //   storageModel.populate(
-      //     tracks,
-      //     { path: "mediaId" },
-      //     function (err, tracks) {
-      //       res.status(200).send({ tracks });
-      //     }
-      //   );
-      // });
+    
     }
   } catch (error) {
     handleHttpError(res, "ERROR_GET_ITEM");
@@ -70,29 +110,34 @@ const getItem = async (req, res) => {
 const createItem = async (req, res) => {
   console.log(req);
   try {
-    const body = matchedData(req);
+  const body = matchedData(req);
 
-    const resultado = await productsModel.create(body);
-    res.send({ resultado });
+  const resultado = await productsModel.create(body);
+  res.send({ resultado });
   } catch (e) {
     handleHttpError(res, "ERROR_CREATE_ITEMS");
   }
 };
 const updateItem = async (req, res) => {
   var resultado;
-  try {
+ try {
     const body = matchedData(req);
     const { id } = body;
-    if (ENGINE_DB === "mysql") {
-      resultado = await productsModel.upsert({
+   if (ENGINE_DB === "mysql") {
+
+    resultado = await productsModel.update({ id, name: body.name, price: body.price,
+       amount: body.amount,stock: body.stock, categoriaId: body.categoriaId, mediaId: body.mediaId  }, {
+      where: {
         id: id,
-        name: body.name,
-      });
+      
+      }
+    });
+      
     } else {
       resultado = await productsModel.findOneAndUpdate(id, body);
     }
 
-    // console.log(body.name);
+     console.log(id);
     res.send({ resultado });
   } catch (e) {
     handleHttpError(res, "ERROR_UPDATE_ITEM");
