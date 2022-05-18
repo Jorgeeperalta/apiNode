@@ -16,7 +16,7 @@ const ProductsSchema = new mongoose.Schema(
     versionKey: false, //
   }
 );
-
+/// buscar uno inconcluso
 ProductsSchema.statics.findOneData = function (id) {
   const joinData = this.aggregate([
 
