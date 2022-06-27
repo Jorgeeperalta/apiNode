@@ -1,4 +1,4 @@
-const { productsModel, storageModel, categoriesModel } = require("../models");
+const {  pantallasModel, storageModel, categoriesModel } = require("../models");
 const { handleHttpError } = require("../utils/handleError");
 const { matchedData } = require("express-validator");
 const ENGINE_DB = process.env.ENGINE_DB;
@@ -13,8 +13,8 @@ const host = process.env.MYSQL_HOST;
  */
 
 const getItems = async (req, res) => {
-  // var user = req.user;
-  var data;
+  var user = req.user;
+  // var data;
   // user.set("password", undefined, { strict: false });
   // user.set("email", undefined, { strict: false });
   try {
@@ -32,29 +32,26 @@ const getItems = async (req, res) => {
         if (err) throw err;
       
         con.query(
-          "SELECT productsses.name,productsses.price,productsses.amount,productsses.stock,"+
-          " categories.name as categoria,storages.filename,storages.url "+
-          "  FROM productsses  INNER JOIN categories on productsses.categoriaId = categories.id "+
-          " JOIN storages ON productsses.mediaId = storages.id",
+          "SELECT * FROM pantallas",
           function (err, result, fields) {
             if (err) throw err;
             console.log(result);
-            res.send({ result });
+            res.send({ result});
           }
         );
       });
 
     
     } else {
-      // user.set("password", undefined, { strict: false });
-      // user.set("email", undefined, { strict: false });
+      user.set("password", undefined, { strict: false });
+      user.set("email", undefined, { strict: false });
 
-      productsModel.find({}, function (err, products) {
+      pantallasModel.find({}, function (err, products) {
         storageModel.populate(
           products,
           { path: "mediaId" },
           function (err, products) {
-            res.status(200).send({ products });
+            res.status(200).send({ products, user });
           },
           categoriesModel.populate(products, { path: "categoriaId" })
         );
@@ -85,7 +82,7 @@ const getItem = async (req, res) => {
         if (err) throw err;
      
         con.query(
-          "SELECT productsses.name,productsses.price,productsses.amount,productsses.stock, categories.name as categoria,storages.filename,storages.url FROM productsses INNER JOIN categories on productsses.categoriaId = categories.id JOIN storages ON productsses.mediaId = storages.id WHERE productsses.id="+id,
+          "SELECT * FROM pantallas WHERE pantallas.id="+id,
           function (err, result, fields) {
             if (err) throw err;
             console.log(result);
@@ -98,7 +95,7 @@ const getItem = async (req, res) => {
 
 
     } else {
-      data = await productsModel.findOneData(id);
+      data = await pantallasModel.findOneData(id);
       console.log(req);
       res.send({ data });
     
@@ -112,7 +109,7 @@ const createItem = async (req, res) => {
   try {
   const body = matchedData(req);
 
-  const resultado = await productsModel.create(body);
+  const resultado = await pantallasModel.create(body);
   res.send({ resultado });
   } catch (e) {
     handleHttpError(res, "ERROR_CREATE_ITEMS");
@@ -125,8 +122,8 @@ const updateItem = async (req, res) => {
     const { id } = body;
    if (ENGINE_DB === "mysql") {
 
-    resultado = await productsModel.update({ id, name: body.name, price: body.price,
-       amount: body.amount,stock: body.stock, categoriaId: body.categoriaId, mediaId: body.mediaId  }, {
+    resultado = await pantallasModel.update({ id, name: body.name, ubicacion: body.ubicacion,
+       fkpais: body.fkpais, fkprovincia: body.fkprovincia, fklocalidad: body.fklocalidad, fkusuario: body.fkusuario  }, {
       where: {
         id: id,
       
@@ -134,7 +131,7 @@ const updateItem = async (req, res) => {
     });
       
     } else {
-      resultado = await productsModel.findOneAndUpdate(id, body);
+      resultado = await pantallasModel.findOneAndUpdate(id, body);
     }
 
      console.log(id);
@@ -150,9 +147,9 @@ const deleteItem = async (req, res) => {
     const { id } = req;
     //
     if (ENGINE_DB === "mysql") {
-      data = await productsModel.destroy({ where: { id } });
+      data = await pantallasModel.destroy({ where: { id } });
     } else {
-      data = await productsModel.deleteOne({ _id: id });
+      data = await pantallasModel.deleteOne({ _id: id });
     }
     // console.log(id);
     res.send({ data });

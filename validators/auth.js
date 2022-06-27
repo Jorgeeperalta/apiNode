@@ -5,6 +5,7 @@ const validatorRegister = [
   check("name").exists().notEmpty().isLength({min: 3,max: 99}),
   check("age").exists().notEmpty().isNumeric({min: 8,max: 99}),
   check("password").exists().notEmpty().isLength({min: 3,max: 15}),
+  check("role").exists().notEmpty().isLength({min: 3,max: 15}),
   check("email").exists().notEmpty().isEmail(),
   (req, res, next) => {
     return validateResults(req, res, next);

@@ -1,6 +1,7 @@
 const { categoriesModel } = require("../models");
 const { handleHttpError } = require("../utils/handleError");
 const { matchedData } = require("express-validator");
+//const {usuarioLogueado}= require("./auth");
 const ENGINE_DB = process.env.ENGINE_DB;
 /**
  *
@@ -9,21 +10,22 @@ const ENGINE_DB = process.env.ENGINE_DB;
  */
 
 const getItems = async (req, res) => {
-  var user = req.user;
+  // console.log(usuarioLogueado +" sdfaf")
+  // var user = req.user;
   var data
   try {
    
 
     if (ENGINE_DB == "mysql") {
-      user.set("password", undefined, { strict: false });
-      user.set("email", undefined, { strict: false });
+      // user.set("password", undefined, { strict: false });
+      // user.set("email", undefined, { strict: false });
        data = await categoriesModel.findAll({});
-      res.send({ data, user });
+      res.send({ data });
     } else {
-      user.set("password", undefined, { strict: false });
-      user.set("email", undefined, { strict: false });
+      // user.set("password", undefined, { strict: false });
+      // user.set("email", undefined, { strict: false });
        data = await categoriesModel.find({});;
-      res.send({ data, user });
+      res.send({ data });
       // categoriesModel.find({}, function (err, tracks) {
       //   storageModel.populate(
       //     tracks,

@@ -4,22 +4,35 @@ const { usersModel } = require("../models");
 const { tokenSing } = require("../utils/handleJwt");
 const { handleHttpError } = require("../utils/handleError");
 const ENGINE_DB = process.env.ENGINE_DB;
+var usuarioLogueado = [];
 const registerCtrl = async (req, res) => {
-  try {
-    req = matchedData(req);
-    const password = await encrypt(req.password);
-    const body = { ...req, password };
-    const dataUser = await usersModel.create(body);
-    console.log(req);
-    //  dataUser.set("password", undefined, { strict: false });
-    const data = {
-      token: await tokenSing(dataUser),
-      user: dataUser,
-    };
-    res.send({ data });
-  } catch (error) {
-    // console.log(req)
-    handleHttpError(res, "ERROR_REGISTER_USER");
+  var user;
+  req = matchedData(req);
+  user = await usersModel.findOne({
+    where: { email: req.email },
+  });
+  console.log(user + ' is registered')
+  if (!user) {
+    try {
+      //req = matchedData(req);
+      const password = await encrypt(req.password);
+      const body = { ...req, password };
+      const dataUser = await usersModel.create(body);
+      console.log(req);
+      dataUser.set("password", undefined, { strict: false });
+      const data = {
+        token: await tokenSing(dataUser),
+        user: dataUser,
+      };
+      res.send({ data });
+    } catch (error) {
+      // console.log(req)
+      handleHttpError(res.send ("ERROR_REGISTER_USER"));
+    }
+  } else {
+    handleHttpError(res, "USER_MAIL_EXISTS",  404);
+    return;
+   // res.send('user register')
   }
 };
 /// cntrola el resultado de login
@@ -54,10 +67,11 @@ const loginCtrl = async (req, res) => {
       token: await tokenSing(user),
       user,
     };
+    usuarioLogueado = data;
     res.send({ data });
   } catch (error) {
     handleHttpError(res, "ERROR_LOGIN_USER");
   }
 };
 
-module.exports = { registerCtrl, loginCtrl };
+module.exports = { registerCtrl, loginCtrl, usuarioLogueado };
