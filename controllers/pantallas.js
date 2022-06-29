@@ -14,9 +14,7 @@ const host = process.env.MYSQL_HOST;
 
 const getItems = async (req, res) => {
   var user = req.user;
-  // var data;
-  // user.set("password", undefined, { strict: false });
-  // user.set("email", undefined, { strict: false });
+
   try {
     if (ENGINE_DB == "mysql") {
       var mysql = require("mysql");

@@ -1,8 +1,14 @@
 # apiNode
- api rest
+apilavalle brinda servicios a aplicacion lavalle.
 
- run start =  npm run dev 
+Desarrollada con Node.js.
 
-  run start =   nodemon app.js
+Toma datos desde nosql (MongoDB) o mysql (phpMyAdmin)
 
-  nosql or mysql
+api rest
+
+run start =  npm run dev 
+
+run start =   nodemon app.js
+
+nosql or mysql

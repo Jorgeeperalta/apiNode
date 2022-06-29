@@ -13,10 +13,9 @@ const host = process.env.MYSQL_HOST;
  */
 
 const getItems = async (req, res) => {
-  // var user = req.user;
+ 
   var data;
-  // user.set("password", undefined, { strict: false });
-  // user.set("email", undefined, { strict: false });
+ 
   try {
     if (ENGINE_DB == "mysql") {
       var mysql = require("mysql");
@@ -46,8 +45,7 @@ const getItems = async (req, res) => {
 
     
     } else {
-      // user.set("password", undefined, { strict: false });
-      // user.set("email", undefined, { strict: false });
+  
 
       productsModel.find({}, function (err, products) {
         storageModel.populate(
@@ -154,7 +152,7 @@ const deleteItem = async (req, res) => {
     } else {
       data = await productsModel.deleteOne({ _id: id });
     }
-    // console.log(id);
+   
     res.send({ data });
   } catch (e) {
     handleHttpError(res, "ERROR_ELIMINA_ITEM");

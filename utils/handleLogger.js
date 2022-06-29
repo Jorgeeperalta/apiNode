@@ -7,7 +7,7 @@ const loggerStream = {
             text: message
         })
         console.log("capturando el log", message)
-      // do anything - emit to websocket? send message somewhere? log to cloud?
+      
     },
   };
 

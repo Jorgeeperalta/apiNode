@@ -62,9 +62,7 @@ const deleteItem = async (req, res) => {
     const {filename} = dataFile
     const filePath = `${MEDIA_PATH}/${filename}`
     console.log(id)
-    // en caso de eliminar de forma logica se comenta
-    // fs.unlinkSync(filePath);
-    // y se agrega  await storageModel.deleteOne({_id:id})
+   
     fs.unlinkSync(filePath); 
     const data = {
       filePath,
