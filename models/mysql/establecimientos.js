@@ -13,6 +13,15 @@ const Establecimientos = sequelize.define(
     ubicacion: {
       type: DataTypes.STRING,
     },
+    lat: {
+      type: DataTypes.STRING,
+    },
+    lng: {
+      type: DataTypes.STRING,
+    },
+    fkimagen: {
+      type: DataTypes.STRING,
+    },
     fkpais: {
       type: DataTypes.STRING,
     },

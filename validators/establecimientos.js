@@ -6,6 +6,9 @@ if (ENGINE_DB === "mysql") {
   validatorCreateItem = [
     check("name").exists().notEmpty(),
     check("ubicacion").exists().notEmpty(),
+    check("lat").exists().notEmpty(),
+    check("lng").exists().notEmpty(),
+    check("fkimagen").exists().notEmpty(),
     check("fkpais").exists().notEmpty(),
     check("fkprovincia").exists().notEmpty(),
     check("fklocalidad").exists().notEmpty(),

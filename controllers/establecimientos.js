@@ -30,7 +30,11 @@ const getItems = async (req, res) => {
         if (err) throw err;
       
         con.query(
-          "SELECT * FROM establecimientos",
+          "SELECT establecimientos.id, establecimientos.name, establecimientos.ubicacion,"+
+          " establecimientos.lat, establecimientos.lng, establecimientos.fkimagen, establecimientos.fkpais," +
+          " establecimientos.fkprovincia, establecimientos.fklocalidad, establecimientos.fkusuario," +
+          "establecimientos.createdAt, establecimientos.updatedAt, storages.url, storages.filename" +
+          " FROM `establecimientos` INNER JOIN storages ON establecimientos.fkimagen = storages.id",
           function (err, result, fields) {
             if (err) throw err;
             console.log(result);
@@ -120,8 +124,8 @@ const updateItem = async (req, res) => {
     const { id } = body;
    if (ENGINE_DB === "mysql") {
 
-    resultado = await establecimientosModel.update({ id, name: body.name, ubicacion: body.ubicacion,
-       fkpais: body.fkpais, fkprovincia: body.fkprovincia, fklocalidad: body.fklocalidad, fkusuario: body.fkusuario  }, {
+    resultado = await establecimientosModel.update({ id, name: body.name, ubicacion: body.ubicacion,lat: body.lat,lng: body.lng,
+       fkimagen: body.fkimagen,fkpais: body.fkpais, fkprovincia: body.fkprovincia, fklocalidad: body.fklocalidad, fkusuario: body.fkusuario  }, {
       where: {
         id: id,
       
