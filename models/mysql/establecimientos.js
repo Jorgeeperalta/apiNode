@@ -22,6 +22,15 @@ const Establecimientos = sequelize.define(
     fkimagen: {
       type: DataTypes.STRING,
     },
+    delivery: {
+      type: DataTypes.STRING,
+    },
+    horario: {
+      type: DataTypes.STRING,
+    },
+    telefono: {
+      type: DataTypes.STRING,
+    },
     fkpais: {
       type: DataTypes.STRING,
     },

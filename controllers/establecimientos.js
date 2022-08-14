@@ -31,7 +31,8 @@ const getItems = async (req, res) => {
       
         con.query(
           "SELECT establecimientos.id, establecimientos.name, establecimientos.ubicacion,"+
-          " establecimientos.lat, establecimientos.lng, establecimientos.fkimagen, establecimientos.fkpais," +
+          " establecimientos.lat, establecimientos.lng, establecimientos.fkimagen, establecimientos.delivery,"+
+          "establecimientos.horario, establecimientos.telefono, establecimientos.fkpais," +
           " establecimientos.fkprovincia, establecimientos.fklocalidad, establecimientos.fkusuario," +
           "establecimientos.createdAt, establecimientos.updatedAt, storages.url, storages.filename" +
           " FROM `establecimientos` INNER JOIN storages ON establecimientos.fkimagen = storages.id",
@@ -84,10 +85,15 @@ const getItem = async (req, res) => {
         if (err) throw err;
      
         con.query(
-          "SELECT * FROM establecimientos WHERE establecimientos.id="+id,
+          "SELECT establecimientos.id, establecimientos.name, establecimientos.ubicacion,"+
+          " establecimientos.lat, establecimientos.lng, establecimientos.fkimagen, establecimientos.delivery,"+
+          "establecimientos.horario, establecimientos.telefono, establecimientos.fkpais," +
+          " establecimientos.fkprovincia, establecimientos.fklocalidad, establecimientos.fkusuario," +
+          "establecimientos.createdAt, establecimientos.updatedAt, storages.url, storages.filename" +
+          " FROM `establecimientos` INNER JOIN storages ON establecimientos.fkimagen = storages.id WHERE establecimientos.fkusuario = "+id,
           function (err, result, fields) {
             if (err) throw err;
-            console.log(result);
+            console.log(id);
             res.send({ result});
           }
         );
@@ -125,7 +131,7 @@ const updateItem = async (req, res) => {
    if (ENGINE_DB === "mysql") {
 
     resultado = await establecimientosModel.update({ id, name: body.name, ubicacion: body.ubicacion,lat: body.lat,lng: body.lng,
-       fkimagen: body.fkimagen,fkpais: body.fkpais, fkprovincia: body.fkprovincia, fklocalidad: body.fklocalidad, fkusuario: body.fkusuario  }, {
+       fkimagen: body.fkimagen, delivery: body.delivery, horario: body.horario, telefono: body.telefono, fkpais: body.fkpais, fkprovincia: body.fkprovincia, fklocalidad: body.fklocalidad, fkusuario: body.fkusuario  }, {
       where: {
         id: id,
       
