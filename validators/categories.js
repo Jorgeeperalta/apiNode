@@ -5,7 +5,8 @@ var validatorCreateItem = [];
 if (ENGINE_DB === "mysql") {
   validatorCreateItem = [
     check("name").exists().notEmpty(),
-  
+    check("fkimagen").exists().notEmpty(),
+    check("fkusuario").exists().notEmpty(),
     (req, res, next) => {
       return validateResults(req, res, next);
     },

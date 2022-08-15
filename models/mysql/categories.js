@@ -8,6 +8,12 @@ const Categories = sequelize.define(
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    fkimagen: {
+      type: DataTypes.STRING,
+    },
+    fkusuario: {
+      type: DataTypes.STRING,
     }
   },
   {

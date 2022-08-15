@@ -1,8 +1,11 @@
 const { categoriesModel } = require("../models");
 const { handleHttpError } = require("../utils/handleError");
 const { matchedData } = require("express-validator");
-
 const ENGINE_DB = process.env.ENGINE_DB;
+const database = process.env.MYSQL_DATABASE;
+const username = process.env.MYSQL_USERNAME;
+const password = process.env.MYSQL_PASSWORD;
+const host = process.env.MYSQL_HOST;
 /**
  *
  * @param {*} req
@@ -16,9 +19,29 @@ const getItems = async (req, res) => {
    
 
     if (ENGINE_DB == "mysql") {
-    
-       data = await categoriesModel.findAll({});
-      res.send({ data });
+      var mysql = require("mysql");
+
+      var con = mysql.createConnection({
+        host: host,
+        user: username,
+        password: password,
+        database: database,
+      });
+      con.connect(function (err) {
+        if (err) throw err;
+      
+        con.query(
+          "SELECT categories.id, categories.name,  categories.fkusuario, storages.id, storages.url FROM categories INNER JOIN storages ON categories.fkimagen = storages.id",
+          function (err, result, fields) {
+            if (err) throw err;
+            console.log(result);
+            res.send({ result});
+          }
+        );
+      });
+    // SELECT categories.id, categories.name, storages.id, storages.url FROM categories INNER JOIN storages ON categories.fkimagen = storages.id
+     //  data = await categoriesModel.findAll({});
+     // res.send({ data });
     } else {
      
        data = await categoriesModel.find({});;
@@ -30,14 +53,38 @@ const getItems = async (req, res) => {
   }
 };
 const getItem = async (req, res) => {
-  var data
+  var data;
   try {
+    
     req = matchedData(req);
     const { id } = req;
     if (ENGINE_DB === "mysql") {
-         data = await categoriesModel.findOneData(id);
-      console.log(req);
-      res.send({ data });
+
+      var mysql = require("mysql");
+
+      var con = mysql.createConnection({
+        host: host,
+        user: username,
+        password: password,
+        database: database,
+      });
+
+      con.connect(function (err) {
+        if (err) throw err;
+     
+        con.query(
+          "SELECT categories.id, categories.name,  categories.fkusuario, storages.id, storages.url  FROM categories INNER JOIN storages ON categories.fkimagen = storages.id WHERE categories.fkusuario = "+id,
+          function (err, result, fields) {
+            if (err) throw err;
+            console.log(id);
+            res.send({ result});
+          }
+        );
+      });
+      
+    
+
+
     } else {
       data = await categoriesModel.findById(id);
       console.log(req);

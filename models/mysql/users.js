@@ -8,8 +8,8 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    age: {
-      type: DataTypes.NUMBER,
+    telefono: {
+      type: DataTypes.STRING,
     },
     email: {
       type: DataTypes.STRING,
