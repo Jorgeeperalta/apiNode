@@ -22,6 +22,7 @@ if (ENGINE_DB === "mysql") {
     check("stock").exists().notEmpty(),
     check("categoriaId").exists().notEmpty(),
     check("mediaId").exists().notEmpty(),
+    check("fkusuario").exists().notEmpty(),
     (req, res, next) => {
       return validateResults(req, res, next);
     },

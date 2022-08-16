@@ -25,6 +25,9 @@ const Products = sequelize.define(
     mediaId: {
       type: DataTypes.STRING,
     },
+    fkusuario: {
+      type: DataTypes.STRING,
+    },
   },
   {
     timestamps: true,
