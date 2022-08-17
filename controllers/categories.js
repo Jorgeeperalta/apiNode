@@ -31,7 +31,7 @@ const getItems = async (req, res) => {
         if (err) throw err;
       
         con.query(
-          "SELECT categories.id, categories.name,  categories.fkusuario, storages.id, storages.url FROM categories INNER JOIN storages ON categories.fkimagen = storages.id",
+          "SELECT categories.id as pk, categories.name,  categories.fkusuario, storages.id, storages.url FROM categories INNER JOIN storages ON categories.fkimagen = storages.id",
           function (err, result, fields) {
             if (err) throw err;
             console.log(result);
@@ -73,7 +73,7 @@ const getItem = async (req, res) => {
         if (err) throw err;
      
         con.query(
-          "SELECT categories.id, categories.name,  categories.fkusuario, storages.id, storages.url  FROM categories INNER JOIN storages ON categories.fkimagen = storages.id WHERE categories.fkusuario = "+id,
+          "SELECT categories.id as pk, categories.name,  categories.fkusuario, storages.id, storages.url  FROM categories INNER JOIN storages ON categories.fkimagen = storages.id WHERE categories.fkusuario = "+id,
           function (err, result, fields) {
             if (err) throw err;
             console.log(id);
@@ -114,6 +114,8 @@ const updateItem = async (req, res) => {
       resultado = await categoriesModel.upsert({
         id: id,
         name: body.name,
+        fkimagen: body.fkimagen,
+        fkusuario: body.fkusuario,
       });
     } else {
       resultado = await categoriesModel.findOneAndUpdate(id, body);
@@ -130,6 +132,7 @@ const deleteItem = async (req, res) => {
   try {
     req = matchedData(req);
     const { id } = req;
+    console.log(id + 'este es un id');
     //
     if (ENGINE_DB === "mysql") {
       data = await categoriesModel.destroy({ where: { id } });
@@ -141,6 +144,7 @@ const deleteItem = async (req, res) => {
   } catch (e) {
     handleHttpError(res, "ERROR_ELIMINA_ITEM");
   }
+  
 };
 
 module.exports = {
