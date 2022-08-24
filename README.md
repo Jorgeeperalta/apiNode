@@ -12,3 +12,4 @@ run start =  npm run dev
 run start =   nodemon app.js
 
 nosql or mysql
+heroku config:set ENGINE_DB=mysql
