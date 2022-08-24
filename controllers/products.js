@@ -31,7 +31,7 @@ const getItems = async (req, res) => {
         if (err) throw err;
       
         con.query(
-          "SELECT productsses.name,productsses.price,productsses.amount,productsses.stock, productsses.fkusuario"+
+          "SELECT productsses.name,productsses.id,productsses.categoriaId,productsses.mediaId,productsses.price,productsses.amount,productsses.stock, productsses.fkusuario"+
           ", categories.name as categoria,storages.filename,storages.url "+
           "  FROM productsses  INNER JOIN categories on productsses.categoriaId = categories.id "+
           " JOIN storages ON productsses.mediaId = storages.id",
@@ -83,7 +83,7 @@ const getItem = async (req, res) => {
         if (err) throw err;
      
         con.query(
-          "SELECT productsses.name,productsses.price,productsses.amount,productsses.stock, productsses.fkusuario, categories.name as categoria,storages.filename,storages.url FROM productsses INNER JOIN categories on productsses.categoriaId = categories.id JOIN storages ON productsses.mediaId = storages.id WHERE productsses.fkusuario="+id,
+          "SELECT productsses.name,productsses.id,productsses.categoriaId,productsses.mediaId,productsses.price,productsses.amount,productsses.stock, productsses.fkusuario, categories.name as categoria,storages.filename,storages.url FROM productsses INNER JOIN categories on productsses.categoriaId = categories.id JOIN storages ON productsses.mediaId = storages.id WHERE productsses.fkusuario="+id,
           function (err, result, fields) {
             if (err) throw err;
             console.log(result);
