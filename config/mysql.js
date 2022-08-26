@@ -22,6 +22,7 @@ const  dbConnectionMysql = async (db) => {
         await sequelize.authenticate()
         console.log("Mysql coneccion correcta!!")
     } catch (e ) {
+    
         console.log("error de coneccion "+e)
     }
 }

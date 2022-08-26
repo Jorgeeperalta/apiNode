@@ -13,6 +13,7 @@ if (ENGINE_DB === "mysql") {
     check("horario").exists().notEmpty(),
     check("telefono").exists().notEmpty(),
     check("fkpais").exists().notEmpty(),
+    check("tipo").exists().notEmpty(),
     check("fkprovincia").exists().notEmpty(),
     check("fklocalidad").exists().notEmpty(),
     check("fkusuario").exists().notEmpty(),

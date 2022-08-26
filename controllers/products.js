@@ -86,7 +86,6 @@ const getItem = async (req, res) => {
           "SELECT productsses.name,productsses.id,productsses.categoriaId,productsses.mediaId,productsses.price,productsses.amount,productsses.stock, productsses.fkusuario, categories.name as categoria,storages.filename,storages.url FROM productsses INNER JOIN categories on productsses.categoriaId = categories.id JOIN storages ON productsses.mediaId = storages.id WHERE productsses.fkusuario="+id,
           function (err, result, fields) {
             if (err) throw err;
-            console.log(result);
             res.send({ result});
           }
         );

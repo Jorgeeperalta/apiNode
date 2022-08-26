@@ -30,7 +30,7 @@ const getItems = async (req, res) => {
         if (err) throw err;
       
         con.query(
-          "SELECT establecimientos.id, establecimientos.name, establecimientos.ubicacion,"+
+          "SELECT establecimientos.id, establecimientos.name,establecimientos.tipo, establecimientos.ubicacion,"+
           " establecimientos.lat, establecimientos.lng, establecimientos.fkimagen, establecimientos.delivery,"+
           "establecimientos.horario, establecimientos.telefono, establecimientos.fkpais," +
           " establecimientos.fkprovincia, establecimientos.fklocalidad, establecimientos.fkusuario," +
@@ -86,7 +86,7 @@ const getItem = async (req, res) => {
      
         con.query(
           "SELECT establecimientos.id, establecimientos.name, establecimientos.ubicacion,"+
-          " establecimientos.lat, establecimientos.lng, establecimientos.fkimagen, establecimientos.delivery,"+
+          " establecimientos.lat, establecimientos.lng, establecimientos.fkimagen,establecimientos.tipo, establecimientos.delivery,"+
           "establecimientos.horario, establecimientos.telefono, establecimientos.fkpais," +
           " establecimientos.fkprovincia, establecimientos.fklocalidad, establecimientos.fkusuario," +
           "establecimientos.createdAt, establecimientos.updatedAt, storages.url, storages.filename" +
@@ -116,9 +116,10 @@ const createItem = async (req, res) => {
   console.log(req);
   try {
   const body = matchedData(req);
-
   const resultado = await establecimientosModel.create(body);
   res.send({ resultado });
+  //INSERT INTO `establecimientos` (`id`,`name`,`ubicacion`,`lat`,`lng`,`fkimagen`,`delivery`,`horario`,`telefono`,`fkpais`,`tipo`,`fkprovincia`,`fklocalidad`,`fkusuario`,`createdAt`,`updatedAt`) VALUES (DEFAULT,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+
   } catch (e) {
     handleHttpError(res, "ERROR_CREATE_ITEMS");
   }
@@ -131,7 +132,7 @@ const updateItem = async (req, res) => {
    if (ENGINE_DB === "mysql") {
 
     resultado = await establecimientosModel.update({ id, name: body.name, ubicacion: body.ubicacion,lat: body.lat,lng: body.lng,
-       fkimagen: body.fkimagen, delivery: body.delivery, horario: body.horario, telefono: body.telefono, fkpais: body.fkpais, fkprovincia: body.fkprovincia, fklocalidad: body.fklocalidad, fkusuario: body.fkusuario  }, {
+       fkimagen: body.fkimagen, delivery: body.delivery, horario: body.horario, telefono: body.telefono, fkpais: body.fkpais, tipo: body.tipo, fkprovincia: body.fkprovincia, fklocalidad: body.fklocalidad, fkusuario: body.fkusuario  }, {
       where: {
         id: id,
       

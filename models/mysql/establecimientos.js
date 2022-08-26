@@ -34,6 +34,9 @@ const Establecimientos = sequelize.define(
     fkpais: {
       type: DataTypes.STRING,
     },
+    tipo: {
+      type: DataTypes.STRING,
+    },
     fkprovincia: {
       type: DataTypes.STRING,
     },
