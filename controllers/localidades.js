@@ -31,7 +31,7 @@ const getItems = async (req, res) => {
         if (err) throw err;
       
         con.query(
-          "SELECT categories.id as pk, categories.name,  categories.fkusuario, storages.id, storages.url FROM categories INNER JOIN storages ON categories.fkimagen = storages.id",
+          "SELECT * FROM localidades",
           function (err, result, fields) {
             if (err) throw err;
             console.log(result);
@@ -50,50 +50,6 @@ const getItems = async (req, res) => {
     }
   } catch (e) {
     handleHttpError(res, "ERROR_GET_ITEMS");
-  }
-};
-
-const getItemsxEstablecimiento = async (req, res) => {
-  var data;
-  try {
-    
-    req = matchedData(req);
-    const { id } = req;
-    if (ENGINE_DB === "mysql") {
-
-      var mysql = require("mysql");
-
-      var con = mysql.createConnection({
-        host: host,
-        user: username,
-        password: password,
-        database: database,
-      });
-
-      con.connect(function (err) {
-        if (err) throw err;
-     
-        con.query(
-          "SELECT categories.name as categoriaNombre, categories.id, categories.fkimagen, categories.fkusuario, storages.url, establecimientos.name as establecimientoNombre, establecimientos.id as fkestablecimiento FROM categories INNER JOIN establecimientos ON categories.fkusuario = establecimientos.fkusuario INNER JOIN storages on categories.fkimagen = storages.id WHERE establecimientos.id ="+id,
-          function (err, result, fields) {
-            if (err) throw err;
-            console.log(id);
-            res.send({ result});
-          }
-        );
-      });
-      
-    
-
-
-    } else {
-      data = await categoriesModel.findById(id);
-      console.log(req);
-      res.send({ data });
-     
-    }
-  } catch (error) {
-    handleHttpError(res, "ERROR_GET_ITEM");
   }
 };
 const getItem = async (req, res) => {
@@ -117,7 +73,7 @@ const getItem = async (req, res) => {
         if (err) throw err;
      
         con.query(
-          "SELECT categories.id as pk, categories.name,  categories.fkusuario, storages.id, storages.url  FROM categories INNER JOIN storages ON categories.fkimagen = storages.id WHERE categories.fkusuario = "+id,
+          "SELECT * FROM localidades WHERE localidades.id="+id,
           function (err, result, fields) {
             if (err) throw err;
             console.log(id);
@@ -176,7 +132,7 @@ const updateItem = async (req, res) => {
      
         con.query(
          
-          "INSERT INTO `categories` (`id`,`name`,`fkimagen`,`fkusuario`,`createdAt`,`updatedAt`) VALUES (DEFAULT,?,?,?,?,?)",
+          "INSERT INTO `localidades` (`id`,`localidad`,`lat`,`lng`,`createdAt`,`updatedAt`) VALUES (DEFAULT,?,?,?,?,?)",
           function (err, result, fields) {
             if (err) throw err;
    
@@ -222,5 +178,4 @@ module.exports = {
   createItem,
   getItems,
   getItem,
-  getItemsxEstablecimiento
 };

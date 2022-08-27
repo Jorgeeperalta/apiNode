@@ -31,11 +31,11 @@ const getItems = async (req, res) => {
       
         con.query(
           "SELECT establecimientos.id, establecimientos.name,establecimientos.tipo, establecimientos.ubicacion,"+
-          " establecimientos.lat, establecimientos.lng, establecimientos.fkimagen, establecimientos.delivery,"+
+          " establecimientos.lat, establecimientos.lng, establecimientos.fkimagen, localidades.localidad, establecimientos.delivery,"+
           "establecimientos.horario, establecimientos.telefono, establecimientos.fkpais," +
           " establecimientos.fkprovincia, establecimientos.fklocalidad, establecimientos.fkusuario," +
           "establecimientos.createdAt, establecimientos.updatedAt, storages.url, storages.filename" +
-          " FROM `establecimientos` INNER JOIN storages ON establecimientos.fkimagen = storages.id",
+          " FROM `establecimientos` INNER JOIN storages ON establecimientos.fkimagen = storages.id INNER JOIN localidades ON establecimientos.fklocalidad = localidades.id",
           function (err, result, fields) {
             if (err) throw err;
             console.log(result);
@@ -64,6 +64,48 @@ const getItems = async (req, res) => {
     handleHttpError(res, "ERROR_GET_ITEMS");
   }
 };
+const getItemxLocalidad = async (req, res) => {
+  var data;
+  try {
+    
+    req = matchedData(req);
+    const { id } = req;
+    if (ENGINE_DB === "mysql") {
+
+      var mysql = require("mysql");
+
+      var con = mysql.createConnection({
+        host: host,
+        user: username,
+        password: password,
+        database: database,
+      });
+
+      con.connect(function (err) {
+        if (err) throw err;
+     
+        con.query(
+          "SELECT * FROM establecimientos WHERE establecimientos.fklocalidad ="+id,
+          function (err, result, fields) {
+            if (err) throw err;
+            res.send({ result});
+          }
+        );
+      });
+      
+    
+
+
+    } else {
+      data = await establecimientosModel.findOneData(id);
+      console.log(req);
+      res.send({ data });
+    
+    }
+  } catch (error) {
+    handleHttpError(res, "ERROR_GET_ITEM");
+  }
+};
 const getItem = async (req, res) => {
   var data;
   try {
@@ -87,10 +129,10 @@ const getItem = async (req, res) => {
         con.query(
           "SELECT establecimientos.id, establecimientos.name, establecimientos.ubicacion,"+
           " establecimientos.lat, establecimientos.lng, establecimientos.fkimagen,establecimientos.tipo, establecimientos.delivery,"+
-          "establecimientos.horario, establecimientos.telefono, establecimientos.fkpais," +
+          "establecimientos.horario, establecimientos.telefono,localidades.localidad, establecimientos.fkpais," +
           " establecimientos.fkprovincia, establecimientos.fklocalidad, establecimientos.fkusuario," +
           "establecimientos.createdAt, establecimientos.updatedAt, storages.url, storages.filename" +
-          " FROM `establecimientos` INNER JOIN storages ON establecimientos.fkimagen = storages.id WHERE establecimientos.fkusuario = "+id,
+          " FROM `establecimientos` INNER JOIN storages ON establecimientos.fkimagen = storages.id INNER JOIN localidades ON establecimientos.fklocalidad = localidades.id WHERE establecimientos.fkusuario = "+id,
           function (err, result, fields) {
             if (err) throw err;
             console.log(id);
@@ -173,4 +215,5 @@ module.exports = {
   createItem,
   getItems,
   getItem,
+  getItemxLocalidad
 };
