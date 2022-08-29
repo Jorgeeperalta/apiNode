@@ -158,10 +158,52 @@ const deleteItem = async (req, res) => {
   }
 };
 
+const getProd = async (req, res) => {
+  var fkuser = "";
+  var fkestablecimiento = ""
+  var fkcategoria = ''
+  req = matchedData(req);
+  try {
+
+    if (ENGINE_DB === "mysql") {
+      fkuser =  req.fkusuario ;
+      fkestablecimiento = req.fkestablecimiento;
+      fkcategoria = req.fkcategoria ;
+      var mysql = require("mysql");
+
+      var con = mysql.createConnection({
+        host: host,
+        user: username,
+        password: password,
+        database: database,
+      });
+
+      con.connect(function (err) {
+        if (err) throw err;
+
+        con.query(
+          "SELECT productsses.name, productsses.id, productsses.price, productsses.mediaId, storages.url , categories.id  as pk FROM productsses INNER JOIN" +
+          " categories on productsses.categoriaId = categories.id INNER JOIN storages ON storages.id = productsses.mediaId  INNER JOIN establecimientos " +
+          " WHERE categories.fkusuario ="+ fkuser + " AND establecimientos.id="+fkestablecimiento+" AND categories.id="+ fkcategoria,
+          function (err, result, fields) {
+            if (err) throw err;
+            res.send({ result});
+          }
+        );
+      });
+       } 
+  } catch (error) {
+  
+    handleHttpError(res, "ERROR_LOGIN_USER");
+  }
+};
+
 module.exports = {
   updateItem,
   deleteItem,
   createItem,
   getItems,
   getItem,
+  getProd
+
 };

@@ -36,5 +36,14 @@ const validatorGetItem = [
     return validateResults(req, res, next);
   },
 ];
+const validatorGetProd = [
+ 
+  check("fkusuario").exists().notEmpty(),
+  check("fkestablecimiento").exists().notEmpty(),
+  check("fkcategoria").exists().notEmpty(),
+  (req, res, next) => {
+    return validateResults(req, res, next);
+  },
+];
 
-module.exports = { validatorCreateItem, validatorGetItem };
+module.exports = { validatorCreateItem, validatorGetItem, validatorGetProd };
