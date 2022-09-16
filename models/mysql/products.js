@@ -19,6 +19,9 @@ const Products = sequelize.define(
     stock: {
       type: DataTypes.INTEGER,
     },
+    detalle: {
+      type: DataTypes.STRING,
+    },
     categoriaId: {
       type: DataTypes.STRING,
     },

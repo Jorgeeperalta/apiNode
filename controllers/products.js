@@ -31,7 +31,7 @@ const getItems = async (req, res) => {
         if (err) throw err;
       
         con.query(
-          "SELECT productsses.name,productsses.id,productsses.categoriaId,productsses.mediaId,productsses.price,productsses.amount,productsses.stock, productsses.fkusuario"+
+          "SELECT productsses.name,productsses.id,productsses.categoriaId,productsses.mediaId,productsses.price,productsses.amount,productsses.stock,productsses.detalle, productsses.fkusuario"+
           ", categories.name as categoria,storages.filename,storages.url "+
           "  FROM productsses  INNER JOIN categories on productsses.categoriaId = categories.id "+
           " JOIN storages ON productsses.mediaId = storages.id",
@@ -83,7 +83,7 @@ const getItem = async (req, res) => {
         if (err) throw err;
      
         con.query(
-          "SELECT productsses.name,productsses.id,productsses.categoriaId,productsses.mediaId,productsses.price,productsses.amount,productsses.stock, productsses.fkusuario, categories.name as categoria,storages.filename,storages.url FROM productsses INNER JOIN categories on productsses.categoriaId = categories.id JOIN storages ON productsses.mediaId = storages.id WHERE productsses.fkusuario="+id,
+          "SELECT productsses.name,productsses.id,productsses.categoriaId,productsses.mediaId,productsses.price,productsses.amount,productsses.stock,productsses.detalle, productsses.fkusuario, categories.name as categoria,storages.filename,storages.url FROM productsses INNER JOIN categories on productsses.categoriaId = categories.id JOIN storages ON productsses.mediaId = storages.id WHERE productsses.fkusuario="+id,
           function (err, result, fields) {
             if (err) throw err;
             res.send({ result});
@@ -123,7 +123,7 @@ const updateItem = async (req, res) => {
    if (ENGINE_DB === "mysql") {
 
     resultado = await productsModel.update({ id, name: body.name, price: body.price,
-       amount: body.amount,stock: body.stock, categoriaId: body.categoriaId, mediaId: body.mediaId  }, {
+       amount: body.amount,stock: body.stock,detalle: body.detalle, categoriaId: body.categoriaId, mediaId: body.mediaId  }, {
       where: {
         id: id,
       
@@ -182,7 +182,7 @@ const getProd = async (req, res) => {
         if (err) throw err;
 
         con.query(
-          "SELECT productsses.name, productsses.id, productsses.price, productsses.mediaId, storages.url , categories.id  as pk FROM productsses INNER JOIN" +
+          "SELECT productsses.name, productsses.id, productsses.price, productsses.detalle, productsses.mediaId, storages.url , categories.id  as pk FROM productsses INNER JOIN" +
           " categories on productsses.categoriaId = categories.id INNER JOIN storages ON storages.id = productsses.mediaId  INNER JOIN establecimientos " +
           " WHERE categories.fkusuario ="+ fkuser + " AND establecimientos.id="+fkestablecimiento+" AND categories.id="+ fkcategoria,
           function (err, result, fields) {

@@ -154,6 +154,56 @@ const getItem = async (req, res) => {
     handleHttpError(res, "ERROR_GET_ITEM");
   }
 };
+
+///////////////////getComercio///////////////////
+const getComercio= async (req, res) => {
+  var data;
+  try {
+    
+    req = matchedData(req);
+    const { id } = req;
+    if (ENGINE_DB === "mysql") {
+
+      var mysql = require("mysql");
+
+      var con = mysql.createConnection({
+        host: host,
+        user: username,
+        password: password,
+        database: database,
+      });
+
+      con.connect(function (err) {
+        if (err) throw err;
+     
+        con.query(
+          "SELECT establecimientos.id, establecimientos.name, establecimientos.ubicacion,"+
+          " establecimientos.lat, establecimientos.lng, establecimientos.fkimagen,establecimientos.tipo, establecimientos.delivery,"+
+          "establecimientos.horario, establecimientos.telefono,localidades.localidad, establecimientos.fkpais," +
+          " establecimientos.fkprovincia, establecimientos.fklocalidad, establecimientos.fkusuario," +
+          "establecimientos.createdAt, establecimientos.updatedAt, storages.url, storages.filename" +
+          " FROM `establecimientos` INNER JOIN storages ON establecimientos.fkimagen = storages.id INNER JOIN localidades ON establecimientos.fklocalidad = localidades.id WHERE establecimientos.id = "+id,
+          function (err, result, fields) {
+            if (err) throw err;
+            console.log(id);
+            res.send({ result});
+          }
+        );
+      });
+      
+    
+
+
+    } else {
+      data = await establecimientosModel.findOneData(id);
+      console.log(req);
+      res.send({ data });
+    
+    }
+  } catch (error) {
+    handleHttpError(res, "ERROR_GET_ITEM");
+  }
+};
 const createItem = async (req, res) => {
   console.log(req);
   try {
@@ -215,5 +265,6 @@ module.exports = {
   createItem,
   getItems,
   getItem,
-  getItemxLocalidad
+  getItemxLocalidad,
+  getComercio
 };
