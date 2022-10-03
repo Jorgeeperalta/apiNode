@@ -155,36 +155,14 @@ const updateItem = async (req, res) => {
     const body = matchedData(req);
     const { id } = body;
     if (ENGINE_DB === "mysql") {
-      // resultado = await categoriesModel.upsert({
-      //   id: id,
-      //   name: body.name,
-      //   fkimagen: body.fkimagen,
-      //   fkusuario: body.fkusuario,
-      // });
-      
-      var mysql = require("mysql");
-
-      var con = mysql.createConnection({
-        host: host,
-        user: username,
-        password: password,
-        database: database,
-      });
-
-      con.connect(function (err) {
-        if (err) throw err;
-     
-        con.query(
-         
-          "INSERT INTO `categories` (`id`,`name`,`fkimagen`,`fkusuario`,`createdAt`,`updatedAt`) VALUES (DEFAULT,?,?,?,?,?)",
-          function (err, result, fields) {
-            if (err) throw err;
-   
-            res.send({ result});
-          }
-        );
-      });
-      
+      resultado = await categoriesModel.update({ id, name: body.name,  fkimagen: body.fkimagen,fkusuario: body.fkusuario}, {
+       where: {
+         id: id,
+       
+       }
+     });
+       
+  
     
     } else {
       resultado = await categoriesModel.findOneAndUpdate(id, body);

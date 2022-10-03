@@ -22,6 +22,15 @@ const Products = sequelize.define(
     detalle: {
       type: DataTypes.STRING,
     },
+    promo: {
+      type: DataTypes.STRING,
+    },
+    dia: {
+      type: DataTypes.STRING,
+    },
+    plato: {
+      type: DataTypes.STRING,
+    },
     categoriaId: {
       type: DataTypes.STRING,
     },
